@@ -19,9 +19,12 @@ function islandora_openseadragon_download_clip(AbstractObject $object) {
       $filename = strtolower($object->label);
       $map = array(
         '/\s/' => '_',
-        "/[^0-9A-Za-z_]/" => '',
+        '/[\'\",\.\?\:\;\(\)\&\!]/' => '',
       );
       $filename = trim(preg_replace(array_keys($map), array_values($map), $filename));
+      if (strlen($filename) <= 0 || (strlen($filename) <= substr_count($filename, '_'))) {
+        $filename = 'download_clip_' . date('Ymd');
+      }
       header("Content-Disposition: attachment; filename=\"{$filename}.jpg\"");
       header("Content-type: image/jpeg");
       header("Content-Transfer-Encoding: binary");
